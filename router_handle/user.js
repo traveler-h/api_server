@@ -9,7 +9,6 @@ exports.reguser = (req, res) => {
     const selSqlStr = 'select * from test_db.persons where name=?'
     const inSqlStr = 'insert into test_db.persons (name, password) values (?,?)'
     db.query(selSqlStr, [data.name], (err, result) => {
-        console.log(result)
         if (err) return  res.cc(err)
         if (result.length > 0) return res.cc('用户名已被占用，请更换用户名' )
         // 用户名可用
