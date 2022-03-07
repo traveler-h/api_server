@@ -1,5 +1,7 @@
 const db = require('../db/index')
 const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
+const config = require('../config')
 exports.reguser = (req, res) => {
     const data = req.body
     // 对表单中的数据进行合法性的校验
@@ -21,6 +23,25 @@ exports.reguser = (req, res) => {
     })
 }
 
-exports.login =  (req, res) => {
-    res.send('登录')
+exports.login = (req, res) => {
+    const userInfo = req.body
+    console.log(userInfo)
+    const selSqlStr = 'select * from test_db.persons where name=?'
+    db.query(selSqlStr, userInfo.name, (err, result) => {
+        if (err) return res.cc(err)
+        if (result.length !== 1) return res.cc('登录失败')
+        // 校验密码
+        // 验证密码是否正确
+        const compareRes = bcrypt.compareSync(userInfo.password, result[0].password)
+        if (!compareRes) return res.cc('密码错误')
+
+        //  在服务器端生成token
+        const user = {...result[0], password: '', pic: ''}
+        const tokenStr = jwt.sign(user, config.jwtSercet,{expiresIn: config.expiresIn})
+        return res.send({
+            status: 0,
+            message: '登录成功',
+            token: `Bearer  ${tokenStr}`
+        })
+    })
 }
