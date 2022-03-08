@@ -25,7 +25,6 @@ exports.reguser = (req, res) => {
 
 exports.login = (req, res) => {
     const userInfo = req.body
-    console.log(userInfo)
     const selSqlStr = 'select * from test_db.persons where name=?'
     db.query(selSqlStr, userInfo.name, (err, result) => {
         if (err) return res.cc(err)

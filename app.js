@@ -34,8 +34,10 @@ app.use((req, res, next) => {
 
 const userRouter = require('./router/user')
 const userInfoRouter = require('./router/userinfo')
+const artcateRouter = require('./router/artcate')
 app.use('/api', userRouter)
 app.use('/my', userInfoRouter)
+app.use('/my/article', artcateRouter)
 
 // 定义错误级别的中间件
 app.use((err, req, res, next) => {
